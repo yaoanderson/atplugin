@@ -1,0 +1,25 @@
+{
+  "manifest_version": 2,
+  "name": "atplugin",
+  "version": "1.0.0",
+  "description": "The plugin is used to generate web ui manual and automation testcase data files soon.",
+  "browser_action": {
+    "default_title": "at plugin",
+    "default_icon": "icon/icon.png",
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "scripts": ["js/background.js"]
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "css": [],
+      "js": ["js/wep.js","js/jquery.min.js","js/script.js"],
+      "run_at": "document_end"
+    }
+  ],
+  "permissions": [
+    "tabs", "activeTab"
+  ]
+}

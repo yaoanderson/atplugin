@@ -1,0 +1,123 @@
+<!doctype html>
+<html>
+  <head>
+    <title>AT Plugin</title>
+    <style>
+      body {
+        width: 460px;
+      }
+      #elements td{
+        padding: 5px;
+        text-align: center;
+      }
+      #steps td{
+        padding: 5px;
+        text-align: center;
+      }
+      .tab-head {
+        text-align: center;
+        margin: 0 auto;
+        width: 350px;
+      }
+      .tab-head>h2 {
+        display: inline-block;
+        padding: 5px;
+        color: #ccc;
+      }
+      .tab-head>h2.selected {
+        color: #000;
+      }
+      .tab-content>div {
+        display: none;
+      }
+      .tab-content>div.show {
+        display: block;
+      }
+      .tab-buttons {
+        text-align: center;
+        padding: 15px;
+      }
+      .step-button {
+        text-align: center;
+        padding-bottom: 10px;
+      }
+      #stepEmptyTableInfo {
+        width: 249px;
+        text-align: center;
+        margin: 0 auto;
+        padding: 5px;
+        border: 1px solid #949494;
+      }
+      #elementEmptyTableInfo {
+        width: 206px;
+        text-align: center;
+        margin: 0 auto;
+        padding: 5px;
+        border: 1px solid #949494;
+      }
+    </style>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/popup.js"></script>
+  </head>
+  <body>
+    <div style="border-bottom: 1px solid #949494;margin-bottom: 15px;">
+      <p>
+      <h2>Web UI Test Recorder</h2>
+      <!--This plugin is mainly used to generate web ui testing test case input data file which can be used to auto-generate web ui manual and automation test cases, so user or tester will not spend too much time to write amount of manual and automation test cases any more.-->
+      Overview:
+        The plugin is named as "atplugin", and it is used to generate web elements and testcase steps files quickly, then these 2 files can be used to generate manual and automation testcase files soon.
+      </p>
+      <p>
+      Use:
+        User can click web page elements when pressing keyboard 'alt' key, then will see clicked elements list and operation steps list in the plugin popup, then click 'generate file' button to output these 2 files.
+      </p>
+    </div>
+    <div>
+      URL: <input type='text' id='url' disabled style="width: 90%;" value=''>
+    </div>
+    <div class="tab-head">
+      <h2 class="selected">Steps</h2>
+      <h2>Elements</h2>
+    </div>
+    <div class="tab-content">
+      <div class="show" style="text-align: center;">
+        <div class="step-button">
+          <button type="button" id='addSleep'>add sleep step</button>
+          <button type="button" id='cleanAllSteps'>clean all steps</button>
+        </div>
+        <table id="steps" border="1" style="margin: 0 auto;">
+          <thead>
+          <tr>
+            <td>ID</td>
+            <td>element</td>
+            <td>value</td>
+            <td>operation</td>
+            <td>manage</td>
+          </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <div id="stepEmptyTableInfo">Please mouse click page element when pressing 'alt' key.</div>
+      </div>
+      <div>
+        <table id="elements" border="1" style="margin: 0 auto;">
+          <thead>
+          <tr>
+            <td>ID</td>
+            <td>name</td>
+            <td>type</td>
+            <td>value</td>
+            <td>manage</td>
+          </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <div id="elementEmptyTableInfo">Auto generate element data by clicking web page element.</div>
+      </div>
+    </div>
+    <div class="tab-buttons">
+      <button type="button" id='gf'>generate file</button>
+    </div>
+
+  </body>
+</html>
