@@ -87,8 +87,13 @@ function getStepsListForTemplate() {
             returnStepList.push(stepList[j]);
         }
         else {
-            var element = elementDict[stepList[j][0]];
-            returnStepList.push(stepList[j].concat(element[element.length-1]));
+            if (elementDict.hasOwnProperty(stepList[j][0])) {
+                var element = elementDict[stepList[j][0]];
+                returnStepList.push(stepList[j].concat(element[element.length-1]));
+            }
+            else {
+                returnStepList.push(stepList[j]);
+            }
         }
     }
     return returnStepList;

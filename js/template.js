@@ -19,20 +19,27 @@ function sleepTemplate(val) {
 }
 
 function generateStepCase(stepLine) {
+    if (stepLine[2] === "sleep") {
+        return sleepTemplate(stepLine[1]);
+    }
+    var ct = "element";
+    if (stepLine.length === 4) {
+        ct = stepLine[3];
+    }
     if (stepLine[2] === "click") {
-        return clickTemplate(stepLine[0], stepLine[3]);
+        return clickTemplate(stepLine[0], ct);
     }
     else if (stepLine[2] === "hover") {
-        return hoverTemplate(stepLine[0], stepLine[3]);
+        return hoverTemplate(stepLine[0], ct);
     }
     else if (stepLine[2] === "input") {
-        return inputTemplate(stepLine[0], stepLine[3], stepLine[1]);
+        return inputTemplate(stepLine[0], ct, stepLine[1]);
     }
     else if (stepLine[2] === "check") {
-        return checkTemplate(stepLine[0], stepLine[3], stepLine[1]);
+        return checkTemplate(stepLine[0], ct, stepLine[1]);
     }
-    else if (stepLine[2] === "sleep") {
-        return sleepTemplate(stepLine[1]);
+    else {
+        return "";
     }
 }
 
