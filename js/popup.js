@@ -46,15 +46,15 @@ function getSteps() {
         for (var i=0; i<stepList.length; i++) {
             var operation = "sleep";
             if (stepList[i][2] !== "sleep") {
-                operation = "<select id='ss" + i + "'>\n<option value ='click'>click</option>\n<option value ='hover'>hover</option>\n<option value ='check'>check</option>\n</select>".replace(">" + stepList[i][2] + "<", "selected = 'selected'>" + stepList[i][2] + "<");
+                operation = "<select id='ss" + i + "'>\n<option value ='click'>click</option>\n<option value ='hover'>hover</option>\n<option value ='input'>input</option>\n<option value ='check'>check</option>\n</select>".replace(">" + stepList[i][2] + "<", "selected = 'selected'>" + stepList[i][2] + "<");
             }
-            $('#steps > tbody').append("<tr><td>" + (i+1) + "</td><td><input type='text' disabled id='sen" + i + "' value='" + stepList[i][0] + "'></td><td>" + "<input type='text' " + ((stepList[i][2] === "check" || stepList[i][2] === "sleep")? "": "disabled") + " value='" + stepList[i][1] + "'>" + "</td><td>" + operation + "</td><td><button type=\"button\" id='s" + i + "'>X</button></td></tr>");
+            $('#steps > tbody').append("<tr><td>" + (i+1) + "</td><td><input type='text' disabled id='sen" + i + "' value='" + stepList[i][0] + "'></td><td>" + "<input type='text' " + ((stepList[i][2] === "check" || stepList[i][2] === "sleep" || stepList[i][2] === "input")? "": "disabled") + " value='" + stepList[i][1] + "'>" + "</td><td>" + operation + "</td><td><button type=\"button\" id='s" + i + "'>X</button></td></tr>");
 
             $('#s' + i).click(function (e) {
                 removeStep(parseInt(e.target.id.slice(1,)));
             });
 
-            if (stepList[i][2] !== "sleep" && stepList[i][2] !== "check") {
+            if (stepList[i][2] !== "sleep" && stepList[i][2] !== "check" && stepList[i][2] !== "input") {
                 $('#steps > tbody').find("tr:last>td:eq(2)").find("input").attr("style", "background-color: #f3f3f3");
             }
 
@@ -63,7 +63,7 @@ function getSteps() {
             if (operation !== "sleep") {
                 var ss = $('#ss' + i);
                 ss.change(function () {
-                    if ($(this).children('option:selected').val() === "check") {
+                    if ($(this).children('option:selected').val() === "check" || $(this).children('option:selected').val() === "input") {
                         $(this).parent().prev().find("input").removeAttr("disabled");
                         $(this).parent().prev().find("input").removeAttr("style");
                     }
