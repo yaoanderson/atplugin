@@ -209,9 +209,11 @@ $(function(){
 
                 if ($(this).text() === "Elements") {
                     getElements();
+                    $("#gtc").attr("style", "display:none");
                 }
                 else if ($(this).text() === "Steps") {
                     getSteps();
+                    $("#gtc").attr("style", "display:inline-block");
                 }
             } else {
                 tabs[i].className = '';
