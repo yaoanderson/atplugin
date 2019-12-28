@@ -141,7 +141,7 @@ window.onload = function() {
 
         $('#gf').click(function () {
             var tab = $(".tab-head>.selected").text();
-            var fileName = "testcase";
+            var fileName = "steps";
             if (tab === "Elements") {
                 fileName = "elements";
                 export_raw(fileName + '.txt', bg.getElementsOutput());
@@ -149,6 +149,12 @@ window.onload = function() {
             else {
                 export_raw(fileName + '.txt', bg.getStepsOutput());
             }
+
+        });
+
+        $('#gtc').click(function () {
+            var bg = chrome.extension.getBackgroundPage();
+            export_raw('testcase.txt', generateAllStepCase(bg.getUrl(), bg.getStepsListForTemplate()));
 
         });
 

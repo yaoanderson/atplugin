@@ -13,6 +13,34 @@ function randomString(len) {
     return pwd;
 }
 
+function getDomType(dom) {
+    if (dom.tagName === "INPUT") {
+        const tp = $(dom).attr("type");
+        if (tp === "button" || tp === "submit" || tp === "file" || tp === "reset") {
+            return "button";
+        }
+        else if (tp === "radio" || tp === "checkbox") {
+            return "select field";
+        }
+        else {
+            return "input field";
+        }
+    }
+    else if (dom.tagName === "A") {
+        return "link";
+    }
+    else if (dom.tagName === "BUTTON") {
+        return "button";
+    }
+    else if (dom.tagName === "IMG") {
+        return "image";
+    }
+    else {
+        return "element";
+    }
+
+}
+
 document.addEventListener('mousedown', function (event) {
     if (control_key === false) {
         return;
@@ -28,6 +56,7 @@ document.addEventListener('mousedown', function (event) {
         name: tagName + "-" + randomString(10),
         wid: result.wid,
         type: result.type,
+        category: getDomType(event.target)
     }, res => {
         // 答复
         // alert(res)
@@ -52,14 +81,15 @@ document.addEventListener('keyup', function (e) {
 
 $("input").on('change', function(){
     var value = $(this).val();
-
     const result = w.getUniqueId(this);
     chrome.runtime.sendMessage({
         status: 1,
         url: window.location.href,
+        name: this.tagName + "-" + randomString(10),
         wid: result.wid,
         type: result.type,
-        value: value
+        value: value,
+        category: "input"
     }, res => {
         // 答复
         // alert(res)

@@ -51,6 +51,10 @@ function updateUrl(url) {
     currentUrl = url;
 }
 
+function getUrl() {
+    return currentUrl;
+}
+
 function getElementsOutput() {
     var elementsString = "ID,NAME,TYPE,VALUE\n";
     var elementList = elementMap[currentUrl];
@@ -67,6 +71,27 @@ function getStepsOutput() {
         stepsString += (i+1) + "," + stepList[i][0] + "," + stepList[i][1] + "," + stepList[i][2] + "\n";
     }
     return stepsString;
+}
+
+function getStepsListForTemplate() {
+    var elementList = elementMap[currentUrl];
+    var elementDict = {};
+    for (var i=0; i<elementList.length; i++) {
+        elementDict[elementList[i][0]] = elementList[i].slice(1,);
+    }
+
+    var stepList =  stepMap[currentUrl];
+    var returnStepList = [];
+    for (var j=0; j<stepList.length; j++) {
+        if (stepList[j][2] === "sleep") {
+            returnStepList.push(stepList[j]);
+        }
+        else {
+            var element = elementDict[stepList[j][0]];
+            returnStepList.push(stepList[j].concat(element[element.length-1]));
+        }
+    }
+    return returnStepList;
 }
 
 chrome.runtime.onMessage.addListener((req,sender, sendResponse) => {
@@ -90,11 +115,11 @@ chrome.runtime.onMessage.addListener((req,sender, sendResponse) => {
                 }
             }
             if (exist === false) {
-                elementMap[currentUrl].push([name, req.type, req.wid]);
+                elementMap[currentUrl].push([name, req.type, req.wid, req.category]);
             }
         }
         else {
-            elementMap[currentUrl] = [[name, req.type, req.wid]];
+            elementMap[currentUrl] = [[name, req.type, req.wid, req.category]];
         }
 
         var operation = "click";

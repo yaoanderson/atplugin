@@ -57,19 +57,19 @@
       }
     </style>
     <script src="js/jquery.min.js"></script>
+    <script src="js/template.js"></script>
     <script src="js/popup.js"></script>
   </head>
   <body>
     <div style="border-bottom: 1px solid #949494;margin-bottom: 15px;">
       <p>
       <h2>Web UI Test Recorder</h2>
-      <!--This plugin is mainly used to generate web ui testing test case input data file which can be used to auto-generate web ui manual and automation test cases, so user or tester will not spend too much time to write amount of manual and automation test cases any more.-->
       Overview:
-        The plugin is named as "atplugin", and it is used to generate web elements and testcase steps files quickly, then these 2 files can be used to generate manual and automation testcase files soon.
+        The plugin is named as "atplugin", and it is used to generate web elements, steps data and manual testcase file quickly, then web elements and steps data files can be used to generate automation testcase file soon.
       </p>
       <p>
       Use:
-        User can click web page elements when pressing keyboard 'alt' key, then will see clicked elements list and operation steps list in the plugin popup, then click 'generate file' button to output these 2 files.
+        User can click web page elements when pressing keyboard 'alt' key, then will see clicked elements list and operation steps list in the plugin popup, then click 'generate data' button to output data files for automation and click 'generate testcase' button to output manual testcase file.
       </p>
     </div>
     <div>
@@ -116,7 +116,8 @@
       </div>
     </div>
     <div class="tab-buttons">
-      <button type="button" id='gf'>generate file</button>
+      <button type="button" id='gf'>generate data</button>
+      <button type="button" id='gtc'>generate testcase</button>
     </div>
 
   </body>

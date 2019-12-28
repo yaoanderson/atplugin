@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "atplugin",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "The plugin is used to generate web ui manual and automation testcase data files soon.",
   "browser_action": {
     "default_title": "at plugin",
