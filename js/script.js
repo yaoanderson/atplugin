@@ -50,12 +50,23 @@ document.addEventListener('mousedown', function (event) {
     if (tagName === "svg") {
         tagName = event.target.parentNode.tagName;
     }
+
+    var value = "";
+    if (result.type === "css" && result.wid.indexOf("tr") !== -1 && result.wid.indexOf("td") !== -1) {
+        var row = result.wid.slice(result.wid.indexOf("tr")+2, result.wid.indexOf(">td"));
+        var preStr = "\"" + row + "\"";
+        if (row.indexOf("nth-child(") !== -1) {
+            preStr = row.slice(row.indexOf("nth-child(")+10, row.indexOf(")")) + "th";
+        }
+        value = "Row " + preStr + ", Col " + result.wid.slice(result.wid.indexOf("nth-child(")+10, result.wid.indexOf("nth-child(")+11) + "th";
+    }
     chrome.runtime.sendMessage({
         status: 1,
-        url: window.location.href,
+        url: window.location.hostname,
         name: tagName + "-" + randomString(10),
         wid: result.wid,
         type: result.type,
+        value: value,
         category: getDomType(event.target)
     }, res => {
         // 答复
@@ -65,7 +76,7 @@ document.addEventListener('mousedown', function (event) {
 
 document.addEventListener('keydown', function (e) {
     switch(e.keyCode) {
-        case 91: // alt or command key
+        case 16: // shift key
             control_key = true;
             return;
 
@@ -73,7 +84,7 @@ document.addEventListener('keydown', function (e) {
 });
 
 document.addEventListener('keyup', function (e) {
-    if (91 === e.keyCode){  // alt or command key
+    if (16 === e.keyCode){  // shift key
         control_key = false;
     }
 });
@@ -84,7 +95,7 @@ $("input").on('change', function(){
     const result = w.getUniqueId(this);
     chrome.runtime.sendMessage({
         status: 1,
-        url: window.location.href,
+        url: window.location.hostname,
         name: this.tagName + "-" + randomString(10),
         wid: result.wid,
         type: result.type,

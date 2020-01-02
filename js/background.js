@@ -127,15 +127,12 @@ chrome.runtime.onMessage.addListener((req,sender, sendResponse) => {
             elementMap[currentUrl] = [[name, req.type, req.wid, req.category]];
         }
 
-        var operation = "click";
-        if (req.value !== undefined) {
-            operation = "input"
-        }
+        var operation = req.category;
         if (stepMap.hasOwnProperty(currentUrl) === true) {
-            stepMap[currentUrl].push([name, operation === "input" ? req.value: "", operation]);
+            stepMap[currentUrl].push([name, (operation === "input" || req.value !== "") ? req.value: "", operation]);
         }
         else {
-            stepMap[currentUrl] = [[name, operation === "input" ? req.value: "", operation]];
+            stepMap[currentUrl] = [[name, (operation === "input" || req.value !== "") ? req.value: "", operation]];
         }
 
         sendResponse("add new step");

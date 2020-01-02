@@ -4,7 +4,7 @@
     <title>AT Plugin</title>
     <style>
       body {
-        width: 460px;
+        /*width: 520px;*/
       }
       #elements td{
         padding: 5px;
@@ -42,14 +42,14 @@
         padding-bottom: 10px;
       }
       #stepEmptyTableInfo {
-        width: 249px;
+        width: 240px;
         text-align: center;
         margin: 0 auto;
         padding: 5px;
         border: 1px solid #949494;
       }
       #elementEmptyTableInfo {
-        width: 206px;
+        width: 200px;
         text-align: center;
         margin: 0 auto;
         padding: 5px;
@@ -61,7 +61,7 @@
     <script src="js/popup.js"></script>
   </head>
   <body>
-    <div style="border-bottom: 1px solid #949494;margin-bottom: 15px;">
+    <div style="border-bottom: 1px solid #949494;">
       <p>
       <h2>Web UI Test Recorder</h2>
       Overview:
@@ -69,10 +69,10 @@
       </p>
       <p>
       Use:
-        User can click web page elements when pressing keyboard 'alt' key, then will see clicked elements list and operation steps list in the plugin popup, then click 'generate data' button to output data files for automation and click 'generate testcase' button to output manual testcase file.
+        User can click web page elements when pressing keyboard 'shift' key, then will see clicked elements list and operation steps list in the plugin popup, then click 'generate data' button to output data files for automation and click 'generate testcase' button to output manual testcase file.
       </p>
     </div>
-    <div>
+    <div style="display: none">
       URL: <input type='text' id='url' disabled style="width: 90%;" value=''>
     </div>
     <div class="tab-head">
@@ -97,7 +97,7 @@
           </thead>
           <tbody></tbody>
         </table>
-        <div id="stepEmptyTableInfo">Please mouse click page element when pressing 'alt' key.</div>
+        <div id="stepEmptyTableInfo">Please mouse click page element when pressing 'shift' key.</div>
       </div>
       <div>
         <table id="elements" border="1" style="margin: 0 auto;">

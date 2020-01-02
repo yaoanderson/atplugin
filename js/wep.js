@@ -83,12 +83,52 @@ prototype.getUniqueId = function (element) {
                 }
             }
             if(index){
-                if(document.querySelectorAll(queryString)[index-1] === element){
+                queryString = queryString + ":nth-child("+index+")";
+                if(document.querySelectorAll(queryString) === element){
                     result.wid = queryString;
                     result.type = "css"
                 }
             }
         }
+    }
+
+    if(!result.wid){
+        if(!element.parentNode){
+            return
+        }
+        var parentQueryResult = wep.prototype.getUniqueId(element.parentNode),
+            parentQueryString = parentQueryResult?parentQueryResult.wid:"";
+        if(!parentQueryString){
+            return{
+                wid:"",
+                type:"NO_LOCATION"
+            };
+        }
+        var targetQuery = tag;
+        if(className){
+            targetQuery += className;
+        }
+        queryString = parentQueryString+">"+targetQuery
+        var queryElements = document.querySelectorAll(queryString);
+        if(queryElements.length>1){
+            queryString = null;
+            var index = null;
+            for(var j=0; j<element.parentNode.children.length; j++){
+                if(element.parentNode.children[j]===element){
+                    index = j+1;
+                    break;
+                }
+            }
+            if(index>=1){
+                queryString = parentQueryString+">"+ targetQuery + ":nth-child("+index+")";
+                var queryTarget = document.querySelector(queryString);
+                if(queryTarget!==element){
+                    queryString = null;
+                }
+            }
+        }
+        result.wid = queryString;
+        result.type = "css";
     }
 
     return result

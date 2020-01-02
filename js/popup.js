@@ -130,12 +130,12 @@ function export_raw(name, data) {
 // end generate file
 
 window.onload = function() {
-    chrome.tabs.query({active:true}, function (tab) {
-        var url = tab[0].url;
+    chrome.tabs.query({currentWindow: true, active:true}, function (tab) {
+        var url = (new URL(tab[0].url)).hostname;
 
         var bg = chrome.extension.getBackgroundPage();
         bg.updateUrl(url);
-        $("#url").val(url);
+        $("#url").val(tab[0].url);
 
         getSteps();
 
@@ -196,7 +196,7 @@ $(function(){
 
     (function changeTab(tab) {
         for(var i = 0, len = tabs.length; i < len; i++) {
-            tabs[i].onmouseover = showTab;
+            tabs[i].onclick = showTab;
         }
     })();
 
