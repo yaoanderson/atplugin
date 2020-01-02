@@ -58,7 +58,7 @@ document.addEventListener('mousedown', function (event) {
         if (row.indexOf("nth-child(") !== -1) {
             preStr = row.slice(row.indexOf("nth-child(")+10, row.indexOf(")")) + "th";
         }
-        value = "Row " + preStr + ", Col " + result.wid.slice(result.wid.indexOf("nth-child(")+10, result.wid.indexOf("nth-child(")+11) + "th";
+        value = "Row " + preStr + "| Col " + result.wid.slice(result.wid.indexOf("nth-child(")+10, result.wid.indexOf("nth-child(")+11) + "th";
     }
     chrome.runtime.sendMessage({
         status: 1,
