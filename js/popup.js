@@ -164,7 +164,7 @@ window.onload = function() {
                 $("#stepEmptyTableInfo").attr("style", "display:none");
             }
             var i = id !== ""? parseInt(id): 0;
-            $('#steps > tbody').append("<tr><td>" + (i+1) + "</td><td><input type='text' disabled id='sen" + i + "' value='PAGE'></td><td>" + "<input type='text' value=''>" + "</td><td>sleep</td><td><button type=\"button\" id='s" + i + "'>X</button></td></tr>");
+            $('#steps > tbody').append("<tr><td>" + (i+1) + "</td><td><input type='text' disabled id='sen" + i + "' value='PAGE'></td><td>" + "<input type='text' value='1'>" + "</td><td>sleep</td><td><button type=\"button\" id='s" + i + "'>X</button></td></tr>");
             var bg = chrome.extension.getBackgroundPage();
             bg.addSleepStepRow();
 

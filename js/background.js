@@ -127,7 +127,7 @@ chrome.runtime.onMessage.addListener((req,sender, sendResponse) => {
             elementMap[currentUrl] = [[name, req.type, req.wid, req.category]];
         }
 
-        var operation = req.category;
+        var operation = req.event;
         if (stepMap.hasOwnProperty(currentUrl) === true) {
             stepMap[currentUrl].push([name, (operation === "input" || req.value !== "") ? req.value: "", operation]);
         }

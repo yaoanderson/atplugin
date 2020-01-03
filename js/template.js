@@ -1,5 +1,9 @@
-function clickTemplate(element, ct) {
-    return "Click " + ct + " (" + element + ")";
+function clickTemplate(element, ct, val) {
+    var cell = "";
+    if (ct === "table cell") {
+        cell = " [" + val + "]";
+    }
+    return "Click " + ct + " (" + element + ")" + cell;
 }
 
 function hoverTemplate(element, ct) {
@@ -27,7 +31,7 @@ function generateStepCase(stepLine) {
         ct = stepLine[3];
     }
     if (stepLine[2] === "click") {
-        return clickTemplate(stepLine[0], ct);
+        return clickTemplate(stepLine[0], ct, stepLine[1]);
     }
     else if (stepLine[2] === "hover") {
         return hoverTemplate(stepLine[0], ct);
