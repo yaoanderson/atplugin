@@ -1,11 +1,12 @@
-# Web UI Test Recorder #
-
+<p>
+<h2>Web UI Test Recorder</h2>
 Overview:
-        The plugin is named as "atplugin", and it is used to generate web elements, steps data and manual testcase file quickly, then web elements and steps data files can be used to generate automation testcase file soon.
-      
+atplugin is a software testing project which is wrote by Anderson.Yao, one SDET in China. The plugin is used to generate web elements, steps data and manual testcase file quickly, then web elements and steps data files can be used to generate automation testcase file soon.
+</p>
+<p>
 Use:
-        User can click web page elements when pressing keyboard 'alt' key, then will see clicked elements list and operation steps list in the plugin popup, then click 'generate data' button to output data files for automation and click 'generate testcase' button to output manual testcase file.
-        This plugin is mainly used to generate web ui testing test case input data file which can be used to auto-generate web ui manual and automation test cases, so user or tester will not spend too much time to write amount of manual and automation test cases any more.
-      
-
-
+User can click web page elements when pressing keyboard 'shift' key, then will see clicked elements list and operation steps list in the plugin popup, then click 'generate data' button to output data files for automation and click 'generate testcase' button to output manual testcase file. In addition can add sleep step to wait for the visualization of elements and add keyword step to include amount of steps.
+</p>
+<p>
+This plugin is published in "Chrome Web Store", and you can search and install "atplugin" plugin in chrome browser.
+</p>
