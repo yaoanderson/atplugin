@@ -152,10 +152,10 @@ window.onload = function() {
             var fileName = "steps";
             if (tab === "Elements") {
                 fileName = "elements";
-                export_raw(fileName + '.txt', bg.getElementsOutput(url));
+                export_raw(fileName + '.csv', bg.getElementsOutput(url));
             }
             else {
-                export_raw(fileName + '.txt', bg.getStepsOutput(url));
+                export_raw(fileName + '.csv', bg.getStepsOutput(url));
             }
 
         });

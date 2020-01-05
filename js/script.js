@@ -70,9 +70,9 @@ window.onload = function() {
             var preStr = rowNum + "th";
             var postStr = (colNum+1) + "th";
             if ($(event.target).parents("table").eq(0).has("thead").length !== 0) {
-                postStr = "\"" + $(event.target).parents("table").find("thead>tr>th:eq(" + colNum + ")").text() + "\"";
+                postStr = "(" + $(event.target).parents("table").find("thead>tr>th:eq(" + colNum + ")").text() + ")";
             }
-            value = "Row " + preStr + "| Col " + postStr + "| Value \"" + $(event.target).text() + "\"";
+            value = "Row " + preStr + "| Col " + postStr + "| Value (" + $(event.target).text() + ")";
         }
 
         chrome.runtime.sendMessage({
