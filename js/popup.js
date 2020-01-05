@@ -182,12 +182,19 @@ window.onload = function() {
 
             $('#steps > tbody').find("tr:last").find("td:eq(2)").find("input").bind('input propertychange', function() {
                 var id = $(this).parent().parent().find("td:eq(0)").text();
-                bg.updateStepValueRow(id === ""? 0: parseInt(id)-1, ($(this).val() === "" || isNaN($(this).val()))? "": parseInt($(this).val()));
+                if (!($(this).val() === "" || isNaN($(this).val()))) {
+                    bg.updateStepValueRow(id === ""? 0: parseInt(id)-1, parseInt($(this).val()));
+                }
+
             });
         });
 
         $("#addKeyword").click(function () {
             var keyword = prompt("Please input keyword name: ");
+            if (keyword === "") {
+                confirm("keyword name is not empty.");
+                return;
+            }
 
             var id = $('#steps > tbody').find("tr:last").find("td:first").text();
             if (id === "") {
