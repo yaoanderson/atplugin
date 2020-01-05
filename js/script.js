@@ -1,3 +1,4 @@
+
 function randomString(len) {
     len = len || 32;
     var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';    /****默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1****/
@@ -58,22 +59,20 @@ window.onload = function() {
         }
 
         var value = "";
-        if (result.type === "css" && result.wid.indexOf("tr") !== -1 && result.wid.indexOf("td") !== -1) {
-            var rowNum = 0, colNum = 0;
-            if (event.target.tagName === "TD") {
-                rowNum = parseInt($(event.target).parent().parent().find("tr").index($(event.target).parent()[0]))+1;
-                colNum = parseInt($(event.target).index());
-            }
-            else if (event.target.parentNode.tagName === "TD") {
-                rowNum = parseInt($(event.target.parentNode).parent().parent().find("tr").index($(event.target.parentNode).parent()[0]))+1;
-                colNum = parseInt($(event.target.parentNode).index());
-            }
+        var td = event.target.tagName === "TD"? $(event.target): null;
+        if (td === null) {
+            td = $(event.target).parents("td").length !== 0? $(event.target).parents("td").eq(0): null;
+        }
+        if (result.type === "css" && td !== null) {
+            var rowNum = parseInt(td.parent().parent().find("tr").index(td.parent()[0]))+1;
+            var colNum = parseInt(td.index());
+
             var preStr = rowNum + "th";
             var postStr = (colNum+1) + "th";
             if ($(event.target).parents("table").eq(0).has("thead").length !== 0) {
                 postStr = "\"" + $(event.target).parents("table").find("thead>tr>th:eq(" + colNum + ")").text() + "\"";
             }
-            value = "Row " + preStr + "| Col " + postStr;
+            value = "Row " + preStr + "| Col " + postStr + "| Value \"" + $(event.target).text() + "\"";
         }
 
         chrome.runtime.sendMessage({

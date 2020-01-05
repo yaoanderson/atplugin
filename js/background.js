@@ -4,10 +4,19 @@ var currentUrl = "";
 
 function addSleepStepRow() {
     if (stepMap.hasOwnProperty(currentUrl) === true) {
-        stepMap[currentUrl].push(["PAGE", "", "sleep"]);
+        stepMap[currentUrl].push(["PAGE", 1, "sleep"]);
     }
     else {
-        stepMap[currentUrl] = [["PAGE", "", "sleep"]];
+        stepMap[currentUrl] = [["PAGE", 1, "sleep"]];
+    }
+}
+
+function addKeywordStepRow(keyword) {
+    if (stepMap.hasOwnProperty(currentUrl) === true) {
+        stepMap[currentUrl].push([keyword, "", "keyword"]);
+    }
+    else {
+        stepMap[currentUrl] = [[keyword, "", "keyword"]];
     }
 }
 
@@ -55,8 +64,9 @@ function getUrl() {
     return currentUrl;
 }
 
-function getElementsOutput() {
-    var elementsString = "ID,NAME,TYPE,VALUE\n";
+function getElementsOutput(url) {
+    var elementsString = url + "\n";
+    elementsString += "ID,NAME,TYPE,VALUE\n";
     var elementList = elementMap[currentUrl];
     for (var i=0; i<elementList.length; i++) {
         elementsString += (i+1) + "," + elementList[i][0] + "," + elementList[i][1] + "," + elementList[i][2] + "\n";
@@ -64,8 +74,9 @@ function getElementsOutput() {
     return elementsString;
 }
 
-function getStepsOutput() {
-    var stepsString = "ID,ELEMENT,VALUE,OPERATION\n";
+function getStepsOutput(url) {
+    var stepsString = url + "\n";
+    stepsString += "ID,ELEMENT,VALUE,OPERATION\n";
     var stepList = stepMap[currentUrl];
     for (var i=0; i<stepList.length; i++) {
         stepsString += (i+1) + "," + stepList[i][0] + "," + stepList[i][1] + "," + stepList[i][2] + "\n";

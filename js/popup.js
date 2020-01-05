@@ -43,24 +43,30 @@ function getSteps() {
         else {
             $("#stepEmptyTableInfo").attr("style", "display:none");
         }
+        var operation = "";
         for (var i=0; i<stepList.length; i++) {
-            var operation = "sleep";
-            if (stepList[i][2] !== "sleep") {
+            if (stepList[i][2] === "sleep") {
+                operation = "sleep";
+            }
+            else if (stepList[i][2] === "keyword") {
+                operation = "keyword";
+            }
+            else {
                 operation = "<select id='ss" + i + "'>\n<option value ='click'>click</option>\n<option value ='hover'>hover</option>\n<option value ='input'>input</option>\n<option value ='check'>check</option>\n</select>".replace(">" + stepList[i][2] + "<", "selected = 'selected'>" + stepList[i][2] + "<");
             }
-            $('#steps > tbody').append("<tr><td>" + (i+1) + "</td><td><input type='text' disabled id='sen" + i + "' value='" + stepList[i][0] + "'></td><td>" + "<input type='text' " + ((stepList[i][2] === "check" || stepList[i][2] === "sleep" || stepList[i][2] === "input")? "": "disabled") + " value='" + stepList[i][1] + "'>" + "</td><td>" + operation + "</td><td><button type=\"button\" id='s" + i + "'>X</button></td></tr>");
+            $('#steps > tbody').append("<tr><td>" + (i+1) + "</td><td><input type='text' style='background-color: #f3f3f3' disabled id='sen" + i + "' value='" + stepList[i][0] + "'></td><td>" + "<input type='text' " + ((stepList[i][2] === "keyword" || stepList[i][2] === "check" || stepList[i][2] === "sleep" || stepList[i][2] === "input")? "": "disabled") + " value='" + stepList[i][1] + "'>" + "</td><td>" + operation + "</td><td><button type=\"button\" id='s" + i + "'>X</button></td></tr>");
 
             $('#s' + i).click(function (e) {
                 removeStep(parseInt(e.target.id.slice(1,)));
             });
 
-            if (stepList[i][2] !== "sleep" && stepList[i][2] !== "check" && stepList[i][2] !== "input") {
+            if (stepList[i][2] !== "sleep" && stepList[i][2] !== "check" && stepList[i][2] !== "input" && stepList[i][2] !== "keyword") {
                 $('#steps > tbody').find("tr:last>td:eq(2)").find("input").attr("style", "background-color: #f3f3f3");
             }
 
             var bg = chrome.extension.getBackgroundPage();
 
-            if (operation !== "sleep") {
+            if (operation !== "sleep" && operation !== "keyword") {
                 var ss = $('#ss' + i);
                 ss.change(function () {
                     if ($(this).children('option:selected').val() === "check" || $(this).children('option:selected').val() === "input") {
@@ -140,14 +146,16 @@ window.onload = function() {
         getSteps();
 
         $('#gf').click(function () {
+            var bg = chrome.extension.getBackgroundPage();
+            var url = bg.getUrl();
             var tab = $(".tab-head>.selected").text();
             var fileName = "steps";
             if (tab === "Elements") {
                 fileName = "elements";
-                export_raw(fileName + '.txt', bg.getElementsOutput());
+                export_raw(fileName + '.txt', bg.getElementsOutput(url));
             }
             else {
-                export_raw(fileName + '.txt', bg.getStepsOutput());
+                export_raw(fileName + '.txt', bg.getStepsOutput(url));
             }
 
         });
@@ -164,7 +172,7 @@ window.onload = function() {
                 $("#stepEmptyTableInfo").attr("style", "display:none");
             }
             var i = id !== ""? parseInt(id): 0;
-            $('#steps > tbody').append("<tr><td>" + (i+1) + "</td><td><input type='text' disabled id='sen" + i + "' value='PAGE'></td><td>" + "<input type='text' value='1'>" + "</td><td>sleep</td><td><button type=\"button\" id='s" + i + "'>X</button></td></tr>");
+            $('#steps > tbody').append("<tr><td>" + (i+1) + "</td><td><input type='text' style='background-color: #f3f3f3' disabled id='sen" + i + "' value='PAGE'></td><td>" + "<input type='text' value='1'>" + "</td><td>sleep</td><td><button type=\"button\" id='s" + i + "'>X</button></td></tr>");
             var bg = chrome.extension.getBackgroundPage();
             bg.addSleepStepRow();
 
@@ -175,6 +183,28 @@ window.onload = function() {
             $('#steps > tbody').find("tr:last").find("td:eq(2)").find("input").bind('input propertychange', function() {
                 var id = $(this).parent().parent().find("td:eq(0)").text();
                 bg.updateStepValueRow(id === ""? 0: parseInt(id)-1, ($(this).val() === "" || isNaN($(this).val()))? "": parseInt($(this).val()));
+            });
+        });
+
+        $("#addKeyword").click(function () {
+            var keyword = prompt("Please input keyword name: ");
+
+            var id = $('#steps > tbody').find("tr:last").find("td:first").text();
+            if (id === "") {
+                $("#stepEmptyTableInfo").attr("style", "display:none");
+            }
+            var i = id !== ""? parseInt(id): 0;
+            $('#steps > tbody').append("<tr><td>" + (i+1) + "</td><td><input style='background-color: #f3f3f3' disabled type='text' id='sen" + i + "' value='" + keyword + "'></td><td>" + "<input type='text' value=''>" + "</td><td>keyword</td><td><button type=\"button\" id='s" + i + "'>X</button></td></tr>");
+            var bg = chrome.extension.getBackgroundPage();
+            bg.addKeywordStepRow(keyword);
+
+            $('#s' + i).click(function (e) {
+                removeStep(parseInt(e.target.id.slice(1,)));
+            });
+
+            $('#steps > tbody').find("tr:last").find("td:eq(2)").find("input").bind('input propertychange', function() {
+                var id = $(this).parent().parent().find("td:eq(0)").text();
+                bg.updateStepValueRow(id === ""? 0: parseInt(id)-1, $(this).val());
             });
         });
 

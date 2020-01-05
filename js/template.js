@@ -22,9 +22,16 @@ function sleepTemplate(val) {
     return "Wait for " + val + "s";
 }
 
+function keywordTemplate(file, val) {
+    return "Invoke keyword file (" + file + ") with arguments (" + val + ")";
+}
+
 function generateStepCase(stepLine) {
     if (stepLine[2] === "sleep") {
         return sleepTemplate(stepLine[1]);
+    }
+    else if (stepLine[2] === "keyword") {
+        return keywordTemplate(stepLine[0], stepLine[1]);
     }
     var ct = "element";
     if (stepLine.length === 4) {
@@ -48,7 +55,7 @@ function generateStepCase(stepLine) {
 }
 
 function generateAllStepCase(url, steplines) {
-    var stepsText = "Go to Page " + url + "\n";
+    var stepsText = "Go to Page (" + url + ")\n";
     for (var i=0; i<steplines.length; i++) {
         stepsText += (i+1) + ". " + generateStepCase(steplines[i]) + "\n";
     }
