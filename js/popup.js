@@ -52,7 +52,7 @@ function getSteps() {
                 operation = "keyword";
             }
             else {
-                operation = "<select id='ss" + i + "'>\n<option value ='click'>click</option>\n<option value ='hover'>hover</option>\n<option value ='input'>input</option>\n<option value ='check'>check</option>\n</select>".replace(">" + stepList[i][2] + "<", "selected = 'selected'>" + stepList[i][2] + "<");
+                operation = "<select id='ss" + i + "'>\n<option value ='click'>click</option>\n<option value ='hover'>hover</option>\n<option value ='wait'>wait</option>\n<option value ='input'>input</option>\n<option value ='check'>check</option>\n</select>".replace(">" + stepList[i][2] + "<", "selected = 'selected'>" + stepList[i][2] + "<");
             }
             $('#steps > tbody').append("<tr><td>" + (i+1) + "</td><td><input type='text' style='background-color: #f3f3f3' disabled id='sen" + i + "' value='" + stepList[i][0] + "'></td><td>" + "<input type='text' " + ((stepList[i][2] === "keyword" || stepList[i][2] === "check" || stepList[i][2] === "sleep" || stepList[i][2] === "input")? "": "disabled") + " value='" + stepList[i][1] + "'>" + "</td><td>" + operation + "</td><td><button type=\"button\" id='s" + i + "'>X</button></td></tr>");
 

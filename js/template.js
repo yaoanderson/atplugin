@@ -10,6 +10,10 @@ function hoverTemplate(element, ct) {
     return "Hover on " + ct + " (" + element + ")";
 }
 
+function waitTemplate(element, ct) {
+    return "Wait for " + ct + " (" + element + ")";
+}
+
 function inputTemplate(element, ct, val) {
     return "Input '" + val + "' in " + ct + " (" + element + ")";
 }
@@ -42,6 +46,9 @@ function generateStepCase(stepLine) {
     }
     else if (stepLine[2] === "hover") {
         return hoverTemplate(stepLine[0], ct);
+    }
+    else if (stepLine[2] === "wait") {
+        return waitTemplate(stepLine[0], ct);
     }
     else if (stepLine[2] === "input") {
         return inputTemplate(stepLine[0], ct, stepLine[1]);
