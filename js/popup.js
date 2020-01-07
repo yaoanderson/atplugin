@@ -51,22 +51,25 @@ function getSteps() {
             else if (stepList[i][2] === "keyword") {
                 operation = "keyword";
             }
+            else if (stepList[i][2] === "function") {
+                operation = "function";
+            }
             else {
                 operation = "<select id='ss" + i + "'>\n<option value ='click'>click</option>\n<option value ='hover'>hover</option>\n<option value ='wait'>wait</option>\n<option value ='input'>input</option>\n<option value ='check'>check</option>\n</select>".replace(">" + stepList[i][2] + "<", "selected = 'selected'>" + stepList[i][2] + "<");
             }
-            $('#steps > tbody').append("<tr><td>" + (i+1) + "</td><td><input type='text' style='background-color: #f3f3f3' disabled id='sen" + i + "' value='" + stepList[i][0] + "'></td><td>" + "<input type='text' " + ((stepList[i][2] === "keyword" || stepList[i][2] === "check" || stepList[i][2] === "sleep" || stepList[i][2] === "input")? "": "disabled") + " value='" + stepList[i][1] + "'>" + "</td><td>" + operation + "</td><td><button type=\"button\" id='s" + i + "'>X</button></td></tr>");
+            $('#steps > tbody').append("<tr><td>" + (i+1) + "</td><td><input type='text' style='background-color: #f3f3f3' disabled id='sen" + i + "' value='" + stepList[i][0] + "'></td><td>" + "<input type='text' " + ((stepList[i][2] === "keyword" || stepList[i][2] === "function" || stepList[i][2] === "check" || stepList[i][2] === "sleep" || stepList[i][2] === "input")? "": "disabled") + " value='" + stepList[i][1] + "'>" + "</td><td>" + operation + "</td><td><button type=\"button\" id='s" + i + "'>X</button></td></tr>");
 
             $('#s' + i).click(function (e) {
                 removeStep(parseInt(e.target.id.slice(1,)));
             });
 
-            if (stepList[i][2] !== "sleep" && stepList[i][2] !== "check" && stepList[i][2] !== "input" && stepList[i][2] !== "keyword") {
+            if (stepList[i][2] !== "sleep" && stepList[i][2] !== "check" && stepList[i][2] !== "input" && stepList[i][2] !== "keyword" && stepList[i][2] !== "function") {
                 $('#steps > tbody').find("tr:last>td:eq(2)").find("input").attr("style", "background-color: #f3f3f3");
             }
 
             var bg = chrome.extension.getBackgroundPage();
 
-            if (operation !== "sleep" && operation !== "keyword") {
+            if (operation !== "sleep" && operation !== "keyword" && operation !== "function") {
                 var ss = $('#ss' + i);
                 ss.change(function () {
                     if ($(this).children('option:selected').val() === "check" || $(this).children('option:selected').val() === "input") {
@@ -147,7 +150,7 @@ window.onload = function() {
 
         $('#gf').click(function () {
             var bg = chrome.extension.getBackgroundPage();
-            var url = bg.getUrl();
+            var url = $("#url").val();
             var tab = $(".tab-head>.selected").text();
             var fileName = "steps";
             if (tab === "Elements") {
@@ -162,7 +165,7 @@ window.onload = function() {
 
         $('#gtc').click(function () {
             var bg = chrome.extension.getBackgroundPage();
-            export_raw('testcase.txt', generateAllStepCase(bg.getUrl(), bg.getStepsListForTemplate()));
+            export_raw('testcase.txt', generateAllStepCase($("#url").val(), bg.getStepsListForTemplate()));
 
         });
 
@@ -189,9 +192,29 @@ window.onload = function() {
             });
         });
 
+        $("#addFunction").click(function () {
+            var id = $('#steps > tbody').find("tr:last").find("td:first").text();
+            if (id === "") {
+                $("#stepEmptyTableInfo").attr("style", "display:none");
+            }
+            var i = id !== ""? parseInt(id): 0;
+            $('#steps > tbody').append("<tr><td>" + (i+1) + "</td><td><input style='background-color: #f3f3f3' disabled type='text' id='sen" + i + "' value='PAGE'></td><td>" + "<input type='text' value='<function name>|<function arguments>'>" + "</td><td>function</td><td><button type=\"button\" id='s" + i + "'>X</button></td></tr>");
+            var bg = chrome.extension.getBackgroundPage();
+            bg.addFunctionStepRow("<function name>|<function arguments>");
+
+            $('#s' + i).click(function (e) {
+                removeStep(parseInt(e.target.id.slice(1,)));
+            });
+
+            $('#steps > tbody').find("tr:last").find("td:eq(2)").find("input").bind('input propertychange', function() {
+                var id = $(this).parent().parent().find("td:eq(0)").text();
+                bg.updateStepValueRow(id === ""? 0: parseInt(id)-1, $(this).val());
+            });
+        });
+
         $("#addKeyword").click(function () {
-            var keyword = prompt("Please input keyword name: ");
-            if (keyword === "") {
+            var keyword = prompt("Please input keyword file name: ");
+            if (keyword === null || keyword === "") {
                 confirm("keyword name is not empty.");
                 return;
             }
@@ -201,9 +224,9 @@ window.onload = function() {
                 $("#stepEmptyTableInfo").attr("style", "display:none");
             }
             var i = id !== ""? parseInt(id): 0;
-            $('#steps > tbody').append("<tr><td>" + (i+1) + "</td><td><input style='background-color: #f3f3f3' disabled type='text' id='sen" + i + "' value='" + keyword + "'></td><td>" + "<input type='text' value=''>" + "</td><td>keyword</td><td><button type=\"button\" id='s" + i + "'>X</button></td></tr>");
+            $('#steps > tbody').append("<tr><td>" + (i+1) + "</td><td><input style='background-color: #f3f3f3' disabled type='text' id='sen" + i + "' value='PAGE'></td><td>" + "<input type='text' value='" + keyword + "|<keyword arguments>'>" + "</td><td>keyword</td><td><button type=\"button\" id='s" + i + "'>X</button></td></tr>");
             var bg = chrome.extension.getBackgroundPage();
-            bg.addKeywordStepRow(keyword);
+            bg.addKeywordStepRow(keyword+ "|<keyword arguments>");
 
             $('#s' + i).click(function (e) {
                 removeStep(parseInt(e.target.id.slice(1,)));
@@ -221,6 +244,10 @@ window.onload = function() {
             $('#steps > tbody').html("");
             $("#stepEmptyTableInfo").attr("style", "display:block");
         });
+
+        $("#use").click(function () {
+            alert("Use:\n* User can click web page elements when pressing keyboard 'shift' key, then will see clicked elements list and operation steps list in the plugin popup\n* User can click 'generate data' button to output data files for automation and click 'generate testcase' button to output manual testcase file.\n* User can add sleep step to wait for the visualization of elements.\n* User can add function step to call custom function.\n* User can add keyword step to include amount of steps.");
+        })
 
     });
 

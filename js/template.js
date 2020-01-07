@@ -1,6 +1,6 @@
 function clickTemplate(element, ct, val) {
     var cell = "";
-    if (ct === "table cell") {
+    if (ct === "table cell" && val !== "") {
         cell = " [" + val + "]";
     }
     return "Click " + ct + " (" + element + ")" + cell;
@@ -26,8 +26,12 @@ function sleepTemplate(val) {
     return "Wait for " + val + "s";
 }
 
-function keywordTemplate(file, val) {
-    return "Invoke keyword file (" + file + ") with arguments (" + val + ")";
+function keywordTemplate(val) {
+    return "Invoke keyword file (" + val.split("|")[0] + ") with arguments (" + val.split("|")[1] + ")";
+}
+
+function functionTemplate(val) {
+    return "Invoke function (" + val.split("|")[0] + ") with arguments (" + val.split("|")[1] + ")";
 }
 
 function generateStepCase(stepLine) {
@@ -35,8 +39,12 @@ function generateStepCase(stepLine) {
         return sleepTemplate(stepLine[1]);
     }
     else if (stepLine[2] === "keyword") {
-        return keywordTemplate(stepLine[0], stepLine[1]);
+        return keywordTemplate(stepLine[1]);
     }
+    else if (stepLine[2] === "function") {
+        return functionTemplate(stepLine[1]);
+    }
+
     var ct = "element";
     if (stepLine.length === 4) {
         ct = stepLine[3];

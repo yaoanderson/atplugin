@@ -1,4 +1,3 @@
-
 function randomString(len) {
     len = len || 32;
     var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';    /****默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1****/
@@ -33,9 +32,10 @@ function getDomType(dom) {
         return "image";
     }
     else {
-        if (dom.tagName === "TD" || dom.parentNode.tagName === "TD") {
+        if ($(dom).parents("td").length !== 0) {
             return "table cell";
         }
+
         return "element";
     }
 
@@ -50,7 +50,7 @@ window.onload = function() {
         if (control_key === false) {
             return;
         }
-        const result = w.getUniqueId(event.target);
+        var result = w.getUniqueId(event.target);
         var tagName = event.target.tagName;
         var category = event.target;
         if (tagName === "svg") {
@@ -63,16 +63,26 @@ window.onload = function() {
         if (td === null) {
             td = $(event.target).parents("td").length !== 0? $(event.target).parents("td").eq(0): null;
         }
-        if (result.type === "css" && td !== null) {
-            var rowNum = parseInt(td.parent().parent().find("tr").index(td.parent()[0]))+1;
-            var colNum = parseInt(td.index());
+        if (td !== null) {
+            var dom = prompt("Please choose element: [0 is 'table', 1 is 'current' (default)]", 1);
+            if (dom === "0") {
+                var rowNum = parseInt(td.parent().parent().find("tr").index(td.parent()[0]))+1;
+                var colNum = parseInt(td.index());
 
-            var preStr = rowNum + "th";
-            var postStr = (colNum+1) + "th";
-            if ($(event.target).parents("table").eq(0).has("thead").length !== 0) {
-                postStr = "(" + $(event.target).parents("table").find("thead>tr>th:eq(" + colNum + ")").text() + ")";
+                var preStr = rowNum + "th";
+                var postStr = (colNum+1) + "th";
+                if ($(event.target).parents("table").eq(0).has("thead").length !== 0) {
+                    postStr = "(" + $(event.target).parents("table").find("thead>tr>th:eq(" + colNum + ")").text() + ")";
+                }
+                value = "Row " + preStr + "| Col " + postStr + "| Value (" + $(event.target).text() + ")";
+
+                const table = td.parents("table").eq(0)[0];
+                result = w.getUniqueId(table);
+                tagName = table.tagName;
+
             }
-            value = "Row " + preStr + "| Col " + postStr + "| Value (" + $(event.target).text() + ")";
+
+            control_key = false;
         }
 
         chrome.runtime.sendMessage({

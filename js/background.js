@@ -13,10 +13,19 @@ function addSleepStepRow() {
 
 function addKeywordStepRow(keyword) {
     if (stepMap.hasOwnProperty(currentUrl) === true) {
-        stepMap[currentUrl].push([keyword, "", "keyword"]);
+        stepMap[currentUrl].push(["PAGE", keyword, "keyword"]);
     }
     else {
-        stepMap[currentUrl] = [[keyword, "", "keyword"]];
+        stepMap[currentUrl] = [["PAGE", keyword, "keyword"]];
+    }
+}
+
+function addFunctionStepRow(val) {
+    if (stepMap.hasOwnProperty(currentUrl) === true) {
+        stepMap[currentUrl].push(["PAGE", val, "function"]);
+    }
+    else {
+        stepMap[currentUrl] = [["PAGE", val, "function"]];
     }
 }
 
@@ -68,9 +77,12 @@ function getElementsOutput(url) {
     var elementsString = url + "\n";
     elementsString += "ID,NAME,TYPE,VALUE\n";
     var elementList = elementMap[currentUrl];
-    for (var i=0; i<elementList.length; i++) {
-        elementsString += (i+1) + "," + elementList[i][0] + "," + elementList[i][1] + "," + elementList[i][2] + "\n";
+    if (elementList !== undefined) {
+        for (var i=0; i<elementList.length; i++) {
+            elementsString += (i+1) + "," + elementList[i][0] + "," + elementList[i][1] + "," + elementList[i][2] + "\n";
+        }
     }
+
     return elementsString;
 }
 
@@ -78,35 +90,43 @@ function getStepsOutput(url) {
     var stepsString = url + "\n";
     stepsString += "ID,ELEMENT,VALUE,OPERATION\n";
     var stepList = stepMap[currentUrl];
-    for (var i=0; i<stepList.length; i++) {
-        stepsString += (i+1) + "," + stepList[i][0] + "," + stepList[i][1] + "," + stepList[i][2] + "\n";
+    if (stepList !== undefined) {
+        for (var i=0; i<stepList.length; i++) {
+            stepsString += (i+1) + "," + stepList[i][0] + "," + stepList[i][1] + "," + stepList[i][2] + "\n";
+        }
     }
+
     return stepsString;
 }
 
 function getStepsListForTemplate() {
-    var elementList = elementMap[currentUrl];
     var elementDict = {};
-    for (var i=0; i<elementList.length; i++) {
-        elementDict[elementList[i][0]] = elementList[i].slice(1,);
+    var elementList = elementMap[currentUrl];
+    if (elementList !== undefined) {
+        for (var i=0; i<elementList.length; i++) {
+            elementDict[elementList[i][0]] = elementList[i].slice(1,);
+        }
     }
 
-    var stepList =  stepMap[currentUrl];
     var returnStepList = [];
-    for (var j=0; j<stepList.length; j++) {
-        if (stepList[j][2] === "sleep") {
-            returnStepList.push(stepList[j]);
-        }
-        else {
-            if (elementDict.hasOwnProperty(stepList[j][0])) {
-                var element = elementDict[stepList[j][0]];
-                returnStepList.push(stepList[j].concat(element[element.length-1]));
+    var stepList =  stepMap[currentUrl];
+    if (stepList !== undefined) {
+        for (var j=0; j<stepList.length; j++) {
+            if (stepList[j][2] === "sleep") {
+                returnStepList.push(stepList[j]);
             }
             else {
-                returnStepList.push(stepList[j]);
+                if (elementDict.hasOwnProperty(stepList[j][0])) {
+                    var element = elementDict[stepList[j][0]];
+                    returnStepList.push(stepList[j].concat(element[element.length-1]));
+                }
+                else {
+                    returnStepList.push(stepList[j]);
+                }
             }
         }
     }
+
     return returnStepList;
 }
 
