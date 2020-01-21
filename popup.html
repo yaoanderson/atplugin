@@ -4,7 +4,7 @@
     <title>AT Plugin</title>
     <style>
       body {
-        /*width: 520px;*/
+
       }
       #elements td{
         padding: 5px;
@@ -35,7 +35,7 @@
       }
       .tab-buttons {
         text-align: center;
-        padding: 15px;
+        padding: 15px 10px 10px 10px;
       }
       .step-button {
         text-align: center;
@@ -59,6 +59,9 @@
         position: absolute;
         left: 90%;
         top: 25px;
+      }
+      #uf {
+        display: none;
       }
     </style>
     <script src="js/jquery.min.js"></script>
@@ -119,8 +122,10 @@
       </div>
     </div>
     <div class="tab-buttons">
-      <button type="button" id='gf'>generate data</button>
-      <button type="button" id='gtc'>generate testcase</button>
+      <button type="button" id="ufb">upload data</button>
+      <input type="file" id="uf" name="" multiple />
+      <button type="button" id='gf'>download data</button>
+      <button type="button" id='gtc'>download testcase</button>
     </div>
 
   </body>

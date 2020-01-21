@@ -75,11 +75,11 @@ function getUrl() {
 
 function getElementsOutput(url) {
     var elementsString = url + "\n";
-    elementsString += "ID,NAME,TYPE,VALUE\n";
+    elementsString += "ID, NAME, TYPE, VALUE, CATEGORY\n";
     var elementList = elementMap[currentUrl];
     if (elementList !== undefined) {
         for (var i=0; i<elementList.length; i++) {
-            elementsString += (i+1) + "," + elementList[i][0] + "," + elementList[i][1] + "," + elementList[i][2] + "\n";
+            elementsString += (i+1) + ", " + elementList[i][0] + ", " + elementList[i][1] + ", " + elementList[i][2] + ", " + elementList[i][3] + "\n";
         }
     }
 
@@ -88,11 +88,11 @@ function getElementsOutput(url) {
 
 function getStepsOutput(url) {
     var stepsString = url + "\n";
-    stepsString += "ID,ELEMENT,VALUE,OPERATION\n";
+    stepsString += "ID, ELEMENT, VALUE, OPERATION\n";
     var stepList = stepMap[currentUrl];
     if (stepList !== undefined) {
         for (var i=0; i<stepList.length; i++) {
-            stepsString += (i+1) + "," + stepList[i][0] + "," + stepList[i][1] + "," + stepList[i][2] + "\n";
+            stepsString += (i+1) + ", " + stepList[i][0] + ", " + stepList[i][1] + ", " + stepList[i][2] + "\n";
         }
     }
 
@@ -130,6 +130,14 @@ function getStepsListForTemplate() {
     return returnStepList;
 }
 
+function uploadSteps(url, val) {
+    stepMap[url] = val;
+}
+
+function uploadElements(url, val) {
+    elementMap[url] = val;
+}
+
 chrome.runtime.onMessage.addListener((req,sender, sendResponse) => {
     if (req.status === 1) {
         updateUrl(req.url);
@@ -160,10 +168,10 @@ chrome.runtime.onMessage.addListener((req,sender, sendResponse) => {
 
         var operation = req.event;
         if (stepMap.hasOwnProperty(currentUrl) === true) {
-            stepMap[currentUrl].push([name, (operation === "input" || req.value !== "") ? req.value: "", operation]);
+            stepMap[currentUrl].push([name, (operation === "input" || req.value !== "") ? req.value.replace(", ", ",").replace(/'/g, "\""): "", operation]);
         }
         else {
-            stepMap[currentUrl] = [[name, (operation === "input" || req.value !== "") ? req.value: "", operation]];
+            stepMap[currentUrl] = [[name, (operation === "input" || req.value !== "") ? req.value.replace(", ", ",").replace(/'/g, "\""): "", operation]];
         }
 
         sendResponse("add new step");
@@ -178,6 +186,7 @@ chrome.runtime.onMessage.addListener((req,sender, sendResponse) => {
     }
     else if (req.status === 3) {
         var stepList = [];
+
         if (stepMap.hasOwnProperty(currentUrl) === true) {
             stepList = stepMap[currentUrl];
         }

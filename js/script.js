@@ -32,10 +32,9 @@ function getDomType(dom) {
         return "image";
     }
     else {
-        if ($(dom).parents("td").length !== 0) {
+        if (dom.tagName === "TD" || dom.parentNode.tagName === "TD") {
             return "table cell";
         }
-
         return "element";
     }
 

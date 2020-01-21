@@ -1,7 +1,9 @@
 function clickTemplate(element, ct, val) {
     var cell = "";
-    if (ct === "table cell" && val !== "") {
-        cell = " [" + val + "]";
+    if (ct === "table cell") {
+        if (val !== "") {
+            cell = " [" + val + "]";
+        }
     }
     return "Click " + ct + " (" + element + ")" + cell;
 }

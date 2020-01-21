@@ -22,8 +22,8 @@ function getElements() {
             });
 
             $('#een' + n).bind('input propertychange', function() {
-                bg.updateStepNameRow(parseInt($(this).parent().parent().find("td:eq(0)").text())-1, $(this).val().replace(",", ""));
-                bg.updateElementNameRow(parseInt($(this).parent().parent().find("td:eq(0)").text())-1, $(this).val().replace(",", ""));
+                bg.updateStepNameRow(parseInt($(this).parent().parent().find("td:eq(0)").text())-1, $(this).val().replace(", ", ",").replace(/'/g, "\""));
+                bg.updateElementNameRow(parseInt($(this).parent().parent().find("td:eq(0)").text())-1, $(this).val().replace(", ", ",").replace(/'/g, "\""));
             });
         }
     });
@@ -36,6 +36,7 @@ function getSteps() {
         // 答复
         var stepsElements = JSON.parse(res);
         var stepList = stepsElements["steps"];
+
         $('#steps > tbody').html("");
         if (stepList.length === 0) {
             $("#stepEmptyTableInfo").attr("style", "display:block");
@@ -86,7 +87,7 @@ function getSteps() {
                 });
 
                 ss.parent().prev().find("input").bind('input propertychange', function() {
-                    bg.updateStepValueRow(parseInt($(this).parent().parent().find("td:eq(0)").text())-1, $(this).val() === ""? "": parseInt($(this).val()));bg.updateStepValueRow(parseInt($(this).parent().parent().find("td:eq(0)").text())-1, $(this).val().replace(",", ""));
+                    bg.updateStepValueRow(parseInt($(this).parent().parent().find("td:eq(0)").text())-1, $(this).val() === ""? "": parseInt($(this).val()));bg.updateStepValueRow(parseInt($(this).parent().parent().find("td:eq(0)").text())-1, $(this).val().replace(", ", ",").replace(/'/g, "\""));
                 });
             }
             else {
@@ -138,6 +139,51 @@ function export_raw(name, data) {
 }
 // end generate file
 
+// upload file
+function handleFileSelect(evt) {
+    var files = evt.target.files; // FileList object
+    if(files[0])
+    {
+        var reader = new FileReader();
+        reader.readAsText(files[0]);
+        reader.onload = loaded;
+    }
+}
+
+function loaded(evt) {
+    var fileString = evt.target.result;
+    if (fileString === "") {
+        return;
+    }
+
+    var url = fileString.split("\n")[0];
+    url = url.split("//")[1].split("/")[0];
+
+    const lines = fileString.split("\n").slice(2,);
+    var ls = [];
+    for (var i=0; i<lines.length; i++) {
+        if (lines[i] !== "") {
+            const li = lines[i].split(", ").slice(1,);
+            li[1] = li[1].replace(/'/g, "\"");
+            ls.push(li);
+        }
+    }
+
+    var bg = chrome.extension.getBackgroundPage();
+
+    var tab = $(".tab-head>.selected").text();
+    if (tab === "Elements") {
+        bg.uploadElements(url, ls);
+        getElements();
+    }
+    else {
+        bg.uploadSteps(url, ls);
+        getSteps();
+    }
+
+}
+// end upload file
+
 window.onload = function() {
     chrome.tabs.query({currentWindow: true, active:true}, function (tab) {
         var url = (new URL(tab[0].url)).hostname;
@@ -147,6 +193,13 @@ window.onload = function() {
         $("#url").val(tab[0].url);
 
         getSteps();
+
+        $('#ufb').click(function () {
+            $("#uf").click();
+        });
+
+        var btn = document.getElementById('uf');
+        btn.addEventListener('change', handleFileSelect, false);
 
         $('#gf').click(function () {
             var bg = chrome.extension.getBackgroundPage();
@@ -246,7 +299,7 @@ window.onload = function() {
         });
 
         $("#use").click(function () {
-            alert("Use:\n* User can click web page elements when pressing keyboard 'shift' key, then will see clicked elements list and operation steps list in the plugin popup\n* User can click 'generate data' button to output data files for automation and click 'generate testcase' button to output manual testcase file.\n* User can add sleep step to wait for the visualization of elements.\n* User can add function step to call custom function.\n* User can add keyword step to include amount of steps.");
+            alert("Use:\n* User can click web page elements when pressing keyboard 'shift' key, then will see clicked elements list and operation steps list in the plugin popup\n* User can click 'generate data' button to output data files for automation and click 'generate testcase' button to output manual testcase file.\n* User can add sleep step to wait for the visualization of elements.\n* User can add function step to call custom function.\n* User can add keyword step to include amount of steps.\n* User can upload data file in order to continue to edit and improve case and elements.");
         })
 
     });
