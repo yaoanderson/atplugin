@@ -139,6 +139,8 @@ function uploadElements(url, val) {
 }
 
 chrome.runtime.onMessage.addListener((req,sender, sendResponse) => {
+    var stepList = [];
+
     if (req.status === 1) {
         updateUrl(req.url);
 
@@ -168,7 +170,16 @@ chrome.runtime.onMessage.addListener((req,sender, sendResponse) => {
 
         var operation = req.event;
         if (stepMap.hasOwnProperty(currentUrl) === true) {
-            stepMap[currentUrl].push([name, (operation === "input" || req.value !== "") ? req.value.replace(", ", ",").replace(/'/g, "\""): "", operation]);
+            stepList = stepMap[currentUrl];
+            var value = (operation === "input" || req.value !== "") ? req.value.replace(", ", ",").replace(/'/g, "\""): "";
+            var lastest = stepList[stepList.length - 1];
+            if (operation === "input" && lastest[2] === "input" && name === lastest[0]) {
+                stepMap[currentUrl][stepList.length - 1][1] = value;
+            }
+            else {
+                stepMap[currentUrl].push([name, value, operation]);
+            }
+
         }
         else {
             stepMap[currentUrl] = [[name, (operation === "input" || req.value !== "") ? req.value.replace(", ", ",").replace(/'/g, "\""): "", operation]];
@@ -185,8 +196,6 @@ chrome.runtime.onMessage.addListener((req,sender, sendResponse) => {
         sendResponse(JSON.stringify({"elements": elementList}));
     }
     else if (req.status === 3) {
-        var stepList = [];
-
         if (stepMap.hasOwnProperty(currentUrl) === true) {
             stepList = stepMap[currentUrl];
         }

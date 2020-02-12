@@ -157,7 +157,8 @@ function loaded(evt) {
     }
 
     var url = fileString.split("\n")[0];
-    url = url.split("//")[1].split("/")[0];
+    // url = url.split("//")[1].split("/")[0];
+    url = url.split("?")[0];
 
     const lines = fileString.split("\n").slice(2,);
     var ls = [];
@@ -186,7 +187,8 @@ function loaded(evt) {
 
 window.onload = function() {
     chrome.tabs.query({currentWindow: true, active:true}, function (tab) {
-        var url = (new URL(tab[0].url)).hostname;
+        // var url = (new URL(tab[0].url)).hostname;
+        var url = tab[0].url.split("?")[0];
 
         var bg = chrome.extension.getBackgroundPage();
         bg.updateUrl(url);

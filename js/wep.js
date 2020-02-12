@@ -96,8 +96,12 @@ prototype.getUniqueId = function (element) {
         if(!element.parentNode){
             return
         }
-        var parentQueryResult = wep.prototype.getUniqueId(element.parentNode),
-            parentQueryString = parentQueryResult?parentQueryResult.wid:"";
+        var regPos = /^\d+$/;
+        var parentQueryResult = wep.prototype.getUniqueId(element.parentNode);
+        var parentQueryString = parentQueryResult?parentQueryResult.wid:"";
+        if (regPos.test(parentQueryString[0])) {
+            parentQueryString = "[" + parentQueryResult.type +"='" + parentQueryString + "']";
+        }
         if(!parentQueryString){
             return{
                 wid:"",
@@ -108,7 +112,7 @@ prototype.getUniqueId = function (element) {
         if(className){
             targetQuery += className;
         }
-        queryString = parentQueryString+">"+targetQuery
+        queryString = parentQueryString+">"+targetQuery;
         var queryElements = document.querySelectorAll(queryString);
         if(queryElements.length>1){
             queryString = null;
