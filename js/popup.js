@@ -192,7 +192,7 @@ window.onload = function() {
 
         var bg = chrome.extension.getBackgroundPage();
         bg.updateUrl(url);
-        $("#url").val(tab[0].url);
+        $("#url").val(url);
 
         getSteps();
 
