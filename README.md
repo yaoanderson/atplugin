@@ -11,6 +11,7 @@ atplugin is a software testing project which is wrote by Anderson.Yao, one SDET 
 <p>* User can add function step to call custom function.</p>
 <p>* User can add keyword step to include amount of steps.</p>
 <p>* User can upload data file in order to continue to edit and improve case and elements.</p>
+<p>* User can use data file in automation framework (https://github.com/yaoanderson/uiat-public).</p>
 </p>
 <br>
 <p>
