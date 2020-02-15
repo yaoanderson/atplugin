@@ -20,6 +20,6 @@
     }
   ],
   "permissions": [
-    "tabs", "activeTab"
+    "tabs"
   ]
 }
